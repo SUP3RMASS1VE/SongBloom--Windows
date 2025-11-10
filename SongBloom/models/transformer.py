@@ -6,7 +6,7 @@ from einops.layers.torch import Rearrange
 import torch
 import torch.nn.functional as F
 from torch import nn, einsum
-from torch.cuda.amp import autocast
+from torch.amp import autocast
 from typing import Callable, Literal
 import os, sys
 import warnings
@@ -15,14 +15,13 @@ from transformers.utils import is_flash_attn_2_available
 
 try:
     assert is_flash_attn_2_available()
-    assert torch.cuda.get_device_capability(torch.device("cuda")) >= (8, 0)
     from flash_attn import flash_attn_func, flash_attn_varlen_func
     from flash_attn.bert_padding import index_first_axis, unpad_input, pad_input
     assert os.environ.get("DISABLE_FLASH_ATTN",'0') != "1"
 except Exception as e:
     flash_attn_kvpacked_func = None
     flash_attn_func = None
-    warnings.warn("Not support flash-attn!")
+    warnings.warn(f"Not support flash-attn: {e}")
 
 try:
     import natten
@@ -129,7 +128,7 @@ class RotaryEmbedding(nn.Module):
         t = torch.arange(seq_len, device = device)
         return self.forward(t)
 
-    @autocast(enabled = False)
+    @autocast('cuda', enabled = False)
     def forward(self, t):
         device = self.inv_freq.device
 
@@ -166,7 +165,7 @@ class RotaryEmbedding2D(RotaryEmbedding):
         
         return self.forward(t_h, t_w)
 
-    @autocast(enabled = False)
+    @autocast('cuda', enabled = False)
     def forward(self, t_h: torch.Tensor, t_w: torch.Tensor):
         repeat_t_h = t_h.repeat_interleave(t_w.shape[0], dim=0)
         repeat_t_w = t_w.repeat(t_h.shape[0])
@@ -191,7 +190,7 @@ def rotate_half(x):
     x1, x2 = x.unbind(dim = -2)
     return torch.cat((-x2, x1), dim = -1)
 
-@autocast(enabled = False)
+@autocast('cuda', enabled = False)
 def apply_rotary_pos_emb(t, freqs, scale = 1):
     out_dtype = t.dtype
 

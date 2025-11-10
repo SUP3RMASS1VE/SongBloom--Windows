@@ -9,7 +9,7 @@ from pathlib import Path
 from omegaconf import OmegaConf
 from huggingface_hub import hf_hub_download
 
-os.environ['DISABLE_FLASH_ATTN'] = "1"
+os.environ['DISABLE_FLASH_ATTN'] = "0"  # Enable flash-attn for faster inference
 from SongBloom.models.songbloom.songbloom_pl import SongBloom_Sampler
 from normalize_lyrics import clean_lyrics
 

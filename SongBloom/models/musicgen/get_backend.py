@@ -8,10 +8,9 @@ import warnings
 
 try:
     assert is_flash_attn_2_available()
-    assert torch.cuda.get_device_capability(torch.device("cuda")) >= (8, 0)
     assert os.environ.get("DISABLE_FLASH_ATTN",'0') != "1"
     _enable_flash_attention = True
-except:
+except Exception as e:
     _enable_flash_attention = False
 
 if not _enable_flash_attention:
