@@ -1,5 +1,11 @@
 import os
 import sys
+import warnings
+
+# Suppress all warnings
+warnings.filterwarnings("ignore")
+os.environ['PYTHONWARNINGS'] = 'ignore'
+
 import torch
 import torchaudio
 import gradio as gr
@@ -168,7 +174,7 @@ with gr.Blocks(title="SongBloom - Song Generation", theme=gr.themes.Soft()) as d
                 )
                 dtype_dropdown = gr.Dropdown(
                     choices=["float32", "bfloat16"],
-                    value="float32",
+                    value="bfloat16",
                     label="Data Type",
                     info="Use bfloat16 for GPUs with low VRAM"
                 )
@@ -181,6 +187,7 @@ with gr.Blocks(title="SongBloom - Song Generation", theme=gr.themes.Soft()) as d
                 gr.Markdown("### Input")
                 lyrics_input = gr.Textbox(
                     label="Lyrics",
+                    value="[intro] [intro] [intro] [intro] [intro] [intro] [intro] [intro] [intro] [intro] [intro] [intro] [intro] , [verse] Are you going to Scarborough Fair. Parsley sage rosemary and thyme. Remember me to one who lives there. He once was a true love of mine , [chorus] Tell him to make me a cambric shirt. Parsley sage rosemary and thyme. Without no seams nor needlework. Then he'll be a true love of mine , [inst] [inst] [inst] [inst] [inst] [inst] [inst] [inst] [inst] [inst] [inst] [inst] [inst] [inst] [inst] [inst] [inst] [inst] , [chorus] Tell him to reap it with a sickle of leather. Parsley sage rosemary and thyme. And gather it all in a bunch of heather. Then he'll be a true love of mine , [verse] Are you going to Scarborough Fair. Parsley sage rosemary and thyme. Remember me to one who lives there. He once was a true love of mine , [outro] [outro] [outro] [outro] [outro] [outro]",
                     placeholder="Enter your lyrics here...\nSee docs/lyric_format.md for formatting details",
                     lines=8
                 )
@@ -228,7 +235,7 @@ with gr.Blocks(title="SongBloom - Song Generation", theme=gr.themes.Soft()) as d
                 )
                 load_dtype = gr.Dropdown(
                     choices=["float32", "bfloat16"],
-                    value="float32",
+                    value="bfloat16",
                     label="Data Type"
                 )
                 load_device = gr.Dropdown(
