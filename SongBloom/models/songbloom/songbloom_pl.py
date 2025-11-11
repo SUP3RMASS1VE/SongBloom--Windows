@@ -87,7 +87,9 @@ class SongBloom_Sampler:
         
         lyric_processor_key = cfg.train_dataset.lyric_processor
     
-        print(incompatible)
+        # Only print if there are missing keys (actual problems)
+        if incompatible.missing_keys:
+            print(f"Warning: Missing keys in checkpoint: {incompatible.missing_keys}")
         
         model_light = model_light.eval()  
         if device is None:
