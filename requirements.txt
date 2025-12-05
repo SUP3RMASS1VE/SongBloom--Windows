@@ -13,5 +13,5 @@ spacy
 num2words
 descript-audio-codec
 vector_quantize_pytorch
-gradio
+gradio==5.50.0
 hf_xet
